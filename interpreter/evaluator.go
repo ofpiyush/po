@@ -7,9 +7,9 @@ import (
 )
 
 var (
-	NIL_OBJ   = &Object{}
-	TRUE_OBJ  = &Object{Type: BOOL_TYPE, Value: true}
-	FALSE_OBJ = &Object{Type: BOOL_TYPE, Value: false}
+	NilObj   = &Object{}
+	TrueObj  = &Object{Type: BOOL, Value: true}
+	FalseObj = &Object{Type: BOOL, Value: false}
 )
 
 func Eval(s *Scope, expr Expression) (*Object, error) {
@@ -49,7 +49,7 @@ func evalConcat(s *Scope, c *Concat) (*Object, error) {
 		str = append(str, tmp.String())
 	}
 
-	return &Object{Type: STRING_TYPE, Value: strings.Join(str, "")}, nil
+	return &Object{Type: STRING, Value: strings.Join(str, "")}, nil
 }
 
 func evalAssign(s *Scope, a *Assign) (*Object, error) {
@@ -96,12 +96,12 @@ func evalBlockExpr(s *Scope, b *BlockExpr) (*Object, error) {
 			return res, nil
 		}
 	}
-	return NIL_OBJ, nil
+	return NilObj, nil
 }
 
 func evalLookup(s *Scope, l *Lookup) (*Object, error) {
 	obj := s.Lookup(l.Name)
-	if obj.Type == NIL_TYPE {
+	if obj.Type == NilObj.Type {
 		return nil, errors.New(l.Name + " not found")
 	}
 	return obj, nil
@@ -141,54 +141,54 @@ func evalInfixExpr(s *Scope, i *Infix) (*Object, error) {
 	var returnObj = &Object{}
 
 	if IntInput[i.Operator] {
-		if l.Type != INT_TYPE {
+		if l.Type != INT {
 			return nil, errors.New("LHS is not an integer")
 		}
-		if r.Type != INT_TYPE {
+		if r.Type != INT {
 			return nil, errors.New("RHS is not an integer")
 		}
 	}
 
 	switch i.Operator {
 	case ADD:
-		returnObj.Type = INT_TYPE
+		returnObj.Type = INT
 		returnObj.Value = l.Value.(int) + r.Value.(int)
 	case SUBTRACT:
-		returnObj.Type = INT_TYPE
+		returnObj.Type = INT
 		returnObj.Value = l.Value.(int) - r.Value.(int)
 	case MULTIPLY:
-		returnObj.Type = INT_TYPE
+		returnObj.Type = INT
 		returnObj.Value = l.Value.(int) * r.Value.(int)
 	case DIVIDE:
-		returnObj.Type = INT_TYPE
+		returnObj.Type = INT
 		returnObj.Value = l.Value.(int) / r.Value.(int)
 	case MOD:
-		returnObj.Type = INT_TYPE
+		returnObj.Type = INT
 		returnObj.Value = l.Value.(int) % r.Value.(int)
 
 	case GREATER:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = l.Value.(int) > r.Value.(int)
 	case LESSER:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = l.Value.(int) < r.Value.(int)
 	case EQUAL:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = false
 		if l.Type == r.Type && l.Value == r.Value {
 			returnObj.Value = true
 		}
 	case NOTEQUAL:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = true
 		if l.Type == r.Type && l.Value == r.Value {
 			returnObj.Value = false
 		}
 	case AND:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = isTruthy(l) && isTruthy(r)
 	case OR:
-		returnObj.Type = BOOL_TYPE
+		returnObj.Type = BOOL
 		returnObj.Value = isTruthy(l) || isTruthy(r)
 	}
 	return returnObj, nil

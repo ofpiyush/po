@@ -17,13 +17,13 @@ var TrueMap = map[string]bool{
 
 func isTruthy(o *Object) bool {
 	switch o.Type {
-	case STRING_TYPE:
+	case STRING:
 		return TrueMap[strings.ToLower(o.Value.(string))]
-	case INT_TYPE:
+	case INT:
 		return o.Value.(int) > 0
-	case BOOL_TYPE:
+	case BOOL:
 		return o.Value.(bool)
-	case NIL_TYPE:
+	case NilObj.Type:
 		return false
 	}
 	return false

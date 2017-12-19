@@ -7,11 +7,11 @@ func TestSimpleAssign(t *testing.T) {
 	ast := &Assign{
 		LHS: &Object{
 			Name:  "yo yo",
-			Type:  INT_TYPE,
+			Type:  INT,
 			Value: 20,
 		},
 		RHS: &Object{
-			Type:  STRING_TYPE,
+			Type:  STRING,
 			Value: "honey singh",
 		},
 	}
@@ -21,8 +21,8 @@ func TestSimpleAssign(t *testing.T) {
 	}
 
 	obj := global.Lookup("yo yo")
-	if obj.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[obj.Type])
+	if obj.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[obj.Type])
 	}
 	if obj.Value != "honey singh" {
 		t.Error("Expected assigned object value to be 'honey singh', got", obj.Value)
@@ -33,15 +33,15 @@ func TestSimpleAssign(t *testing.T) {
 func TestSimpleLookup(t *testing.T) {
 
 	global := NewScope("root", nil)
-	global.Update("yo yo", &Object{Type: STRING_TYPE, Value: "Honey singh"})
+	global.Update("yo yo", &Object{Type: STRING, Value: "Honey singh"})
 	ast := &Lookup{Name: "yo yo"}
 	obj, err := Eval(global, ast)
 	if err != nil {
 		t.Error(err)
 	}
 
-	if obj.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[obj.Type])
+	if obj.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[obj.Type])
 	}
 	if obj.Value != "Honey singh" {
 		t.Error("Expected assigned object value to be 'Honey singh', got", obj.Value)
@@ -53,15 +53,15 @@ func TestSimpleConcatExpr(t *testing.T) {
 	ast := &Concat{
 		Source: []Expression{
 			&Object{
-				Type:  STRING_TYPE,
+				Type:  STRING,
 				Value: "Yahan se ",
 			},
 			&Object{
-				Type:  INT_TYPE,
+				Type:  INT,
 				Value: 50,
 			},
 			&Object{
-				Type:  STRING_TYPE,
+				Type:  STRING,
 				Value: " kos door",
 			},
 		},
@@ -70,8 +70,8 @@ func TestSimpleConcatExpr(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	if obj.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[obj.Type])
+	if obj.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[obj.Type])
 	}
 	if obj.Value != "Yahan se 50 kos door" {
 		t.Error("Expected assigned object value to be 'Yahan se 50 kos door', got", obj.Value)
@@ -85,19 +85,19 @@ func TestBlockExpression(t *testing.T) {
 		Expressions: []Expression{
 			&Assign{
 				LHS: &Object{Name: "mom"},
-				RHS: &Object{Type: STRING_TYPE, Value: "maa"},
+				RHS: &Object{Type: STRING, Value: "maa"},
 			},
 			&Assign{
 				LHS: &Object{Name: "pachas"},
-				RHS: &Object{Type: INT_TYPE, Value: 50},
+				RHS: &Object{Type: INT, Value: 50},
 			},
 			&Assign{
 				LHS: &Object{Name: "s1"},
 				RHS: &Concat{
 					Source: []Expression{
-						&Object{Type: STRING_TYPE, Value: "Yahan se "},
+						&Object{Type: STRING, Value: "Yahan se "},
 						&Lookup{Name: "pachas"},
-						&Object{Type: STRING_TYPE, Value: " kos door "},
+						&Object{Type: STRING, Value: " kos door "},
 					},
 				},
 			},
@@ -105,9 +105,9 @@ func TestBlockExpression(t *testing.T) {
 				LHS: &Object{Name: "s2"},
 				RHS: &Concat{
 					Source: []Expression{
-						&Object{Type: STRING_TYPE, Value: "jab koi "},
-						&Object{Type: STRING_TYPE, Value: "mai ka laal "},
-						&Object{Type: STRING_TYPE, Value: "rota hai "},
+						&Object{Type: STRING, Value: "jab koi "},
+						&Object{Type: STRING, Value: "mai ka laal "},
+						&Object{Type: STRING, Value: "rota hai "},
 					},
 				},
 			},
@@ -115,9 +115,9 @@ func TestBlockExpression(t *testing.T) {
 				LHS: &Object{Name: "s3"},
 				RHS: &Concat{
 					Source: []Expression{
-						&Object{Type: STRING_TYPE, Value: "tab uski "},
+						&Object{Type: STRING, Value: "tab uski "},
 						&Lookup{Name: "mom"},
-						&Object{Type: STRING_TYPE, Value: " kehti hai, "},
+						&Object{Type: STRING, Value: " kehti hai, "},
 					},
 				},
 			},
@@ -128,8 +128,8 @@ func TestBlockExpression(t *testing.T) {
 						&Lookup{Name: "s1"},
 						&Lookup{Name: "s2"},
 						&Lookup{Name: "s3"},
-						&Object{Type: STRING_TYPE, Value: "beta so jaa "},
-						&Object{Type: STRING_TYPE, Value: "nahi to Gabbar singh aa jaayega"},
+						&Object{Type: STRING, Value: "beta so jaa "},
+						&Object{Type: STRING, Value: "nahi to Gabbar singh aa jaayega"},
 					},
 				},
 			},
@@ -141,8 +141,8 @@ func TestBlockExpression(t *testing.T) {
 	}
 
 	s := global.Lookup("s4")
-	if s.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[s.Type])
+	if s.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[s.Type])
 	}
 	if s.Value != "Yahan se 50 kos door jab koi mai ka laal rota hai tab uski maa kehti hai, beta so jaa nahi to Gabbar singh aa jaayega" {
 		t.Error("Expected assigned object value to be 'Yahan se 50 kos door jab koi bachha rota hai tab uski maa kehti hai, beta so jaa nahi to Gabbar singh aa jaayega', got", s.Value)
@@ -157,27 +157,27 @@ func TestIfAsStatement(t *testing.T) {
 		Success: &BlockExpr{
 			Expressions: []Expression{&Assign{
 				LHS: &Object{Name: "dialogue"},
-				RHS: &Object{Type: STRING_TYPE, Value: "Kitne aadmi the?"},
+				RHS: &Object{Type: STRING, Value: "Kitne aadmi the?"},
 			}},
 		},
 		Fail: &BlockExpr{
 			Expressions: []Expression{&Assign{
 				LHS: &Object{Name: "dialogue"},
-				RHS: &Object{Type: STRING_TYPE, Value: "Do sarkaar"},
+				RHS: &Object{Type: STRING, Value: "Do sarkaar"},
 			}},
 		},
 	}
-	TrueInt := &Object{Type: INT_TYPE, Value: 1}
-	FalseInt := &Object{Type: INT_TYPE, Value: 0}
-	TrueStr := &Object{Type: STRING_TYPE, Value: "yes"}
-	FalseStr := &Object{Type: STRING_TYPE, Value: ""}
+	TrueInt := &Object{Type: INT, Value: 1}
+	FalseInt := &Object{Type: INT, Value: 0}
+	TrueStr := &Object{Type: STRING, Value: "yes"}
+	FalseStr := &Object{Type: STRING, Value: ""}
 
 	global.Update("gabbar_or_samba", TrueInt)
 	Eval(global, ast)
 
 	k := global.Lookup("dialogue")
-	if k.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[k.Type])
+	if k.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[k.Type])
 	}
 	if k.Value != "Kitne aadmi the?" {
 		t.Error("Expected assigned object value to be 'Kitne aadmi the?', got", k.Value)
@@ -187,8 +187,8 @@ func TestIfAsStatement(t *testing.T) {
 	Eval(global, ast)
 
 	k = global.Lookup("dialogue")
-	if k.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[k.Type])
+	if k.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[k.Type])
 	}
 	if k.Value != "Do sarkaar" {
 		t.Error("Expected assigned object value to be 'Do sarkaar', got", k.Value)
@@ -198,8 +198,8 @@ func TestIfAsStatement(t *testing.T) {
 	Eval(global, ast)
 
 	k = global.Lookup("dialogue")
-	if k.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[k.Type])
+	if k.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[k.Type])
 	}
 	if k.Value != "Kitne aadmi the?" {
 		t.Error("Expected assigned object value to be 'Kitne aadmi the?', got", k.Value)
@@ -209,8 +209,8 @@ func TestIfAsStatement(t *testing.T) {
 	Eval(global, ast)
 
 	k = global.Lookup("dialogue")
-	if k.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[k.Type])
+	if k.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[k.Type])
 	}
 	if k.Value != "Do sarkaar" {
 		t.Error("Expected assigned object value to be 'Do sarkaar', got", k.Value)
@@ -219,16 +219,16 @@ func TestIfAsStatement(t *testing.T) {
 
 func TestLambda(t *testing.T) {
 	global := NewScope("root", nil)
-	global.Update("pachas", &Object{Type: INT_TYPE, Value: 50})
+	global.Update("pachas", &Object{Type: INT, Value: 50})
 
 	ast := &Lambda{
 		Params: map[string]Expression{
-			"mom": &Object{Type: STRING_TYPE, Value: "maa"},
+			"mom": &Object{Type: STRING, Value: "maa"},
 			"s1": &Concat{
 				Source: []Expression{
-					&Object{Type: STRING_TYPE, Value: "Yahan se "},
+					&Object{Type: STRING, Value: "Yahan se "},
 					&Lookup{Name: "pachas"},
-					&Object{Type: STRING_TYPE, Value: " kos door "},
+					&Object{Type: STRING, Value: " kos door "},
 				},
 			},
 		},
@@ -238,9 +238,9 @@ func TestLambda(t *testing.T) {
 					LHS: &Object{Name: "s2"},
 					RHS: &Concat{
 						Source: []Expression{
-							&Object{Type: STRING_TYPE, Value: "jab koi "},
-							&Object{Type: STRING_TYPE, Value: "mai ka laal "},
-							&Object{Type: STRING_TYPE, Value: "rota hai "},
+							&Object{Type: STRING, Value: "jab koi "},
+							&Object{Type: STRING, Value: "mai ka laal "},
+							&Object{Type: STRING, Value: "rota hai "},
 						},
 					},
 				},
@@ -248,9 +248,9 @@ func TestLambda(t *testing.T) {
 					LHS: &Object{Name: "s3"},
 					RHS: &Concat{
 						Source: []Expression{
-							&Object{Type: STRING_TYPE, Value: "tab uski "},
+							&Object{Type: STRING, Value: "tab uski "},
 							&Lookup{Name: "mom"},
-							&Object{Type: STRING_TYPE, Value: " kehti hai, "},
+							&Object{Type: STRING, Value: " kehti hai, "},
 						},
 					},
 				},
@@ -260,8 +260,8 @@ func TestLambda(t *testing.T) {
 							&Lookup{Name: "s1"},
 							&Lookup{Name: "s2"},
 							&Lookup{Name: "s3"},
-							&Object{Type: STRING_TYPE, Value: "beta so jaa "},
-							&Object{Type: STRING_TYPE, Value: "nahi to Gabbar singh aa jaayega"},
+							&Object{Type: STRING, Value: "beta so jaa "},
+							&Object{Type: STRING, Value: "nahi to Gabbar singh aa jaayega"},
 						},
 					},
 				},
@@ -273,8 +273,8 @@ func TestLambda(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if out.Type != STRING_TYPE {
-		t.Error("Expected assigned object type to be STRING_TYPE, got", TypeName[out.Type])
+	if out.Type != STRING {
+		t.Error("Expected assigned object type to be STRING, got", TypeName[out.Type])
 	}
 	if out.Value != "Yahan se 50 kos door jab koi mai ka laal rota hai tab uski maa kehti hai, beta so jaa nahi to Gabbar singh aa jaayega" {
 		t.Error("Expected assigned object value to be 'Yahan se 50 kos door jab koi bachha rota hai tab uski maa kehti hai, beta so jaa nahi to Gabbar singh aa jaayega', got", out.Value)

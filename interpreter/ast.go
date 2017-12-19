@@ -11,10 +11,10 @@ type InfixOperation int64
 
 const (
 	_ Type = iota
-	INT_TYPE
-	STRING_TYPE
-	BOOL_TYPE
-	HASH_TYPE
+	INT
+	STRING
+	BOOL
+	MAP
 )
 
 const (
@@ -35,10 +35,10 @@ const (
 )
 
 var TypeName = map[Type]string{
-	INT_TYPE:    "INT",
-	STRING_TYPE: "STRING",
-	BOOL_TYPE:   "BOOL",
-	HASH_TYPE:   "HASH",
+	INT:    "INT",
+	STRING: "STRING",
+	BOOL:   "BOOL",
+	MAP:    "HASH",
 }
 
 // Expression is the basic struct of our language.
@@ -124,13 +124,13 @@ func (*Infix) Info() string     { return "I am an infix operation" }
 
 func (o *Object) String() string {
 	switch o.Type {
-	case STRING_TYPE:
+	case STRING:
 		return o.Value.(string)
-	case INT_TYPE:
+	case INT:
 		return strconv.FormatInt(int64(o.Value.(int)), 10)
-	case BOOL_TYPE:
+	case BOOL:
 		return fmt.Sprintf("%t", o.Value.(bool))
-	case HASH_TYPE:
+	case MAP:
 		return fmt.Sprintf("%v", o.Value)
 	}
 	return ""
@@ -139,15 +139,15 @@ func (o *Object) String() string {
 func (o *Object) HashKey() (key HashKey) {
 	key.Type = o.Type
 	switch o.Type {
-	case STRING_TYPE:
-	case INT_TYPE:
+	case STRING:
+	case INT:
 		key.KeyHash = uint64(o.Value.(int))
-	case BOOL_TYPE:
+	case BOOL:
 		key.KeyHash = 0
 		if isTruthy(o) {
 			key.KeyHash = 1
 		}
-	case HASH_TYPE:
+	case MAP:
 		// Phat ke phlawar ho jaao piliz
 	}
 	return
